@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "glopezfrutos",
+    "public": "dist/glopezfrutos",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
