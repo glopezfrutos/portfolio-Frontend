@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, retry, throwError } from 'rxjs';
-import { backendUrl } from '../shared/backendUrl';
-import { loginAnswerType, loginFormType } from '../shared/types/loginType';
+import { backendUrl } from '../../shared/backendUrl';
+import { loginAnswerType, loginFormType } from '../../shared/types/loginType';
 import { catchError, map } from "rxjs/operators";
 
 const httpOptions = {

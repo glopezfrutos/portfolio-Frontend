@@ -3,7 +3,7 @@ import {Validators} from '@angular/forms';
 import {FormBuilder} from '@angular/forms';
 import {Injectable} from '@angular/core';
 import {loginFormType} from '../shared/types/loginType';
-import {LoginService} from '../services/login.service';
+import {LoginService} from '../service/login/login.service';
 import {Router} from "@angular/router";
 
 @Component({
