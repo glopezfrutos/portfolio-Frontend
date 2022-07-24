@@ -1,1 +1,38 @@
-<p>login works!</p>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+  Log in
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="loginModalLabel">Login</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Login form -->
+        <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username: </label>
+            <input id="username" type="text" formControlName="username" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password: </label>
+            <input id="password" type="password" formControlName="password" class="form-control">
+          </div>
+          <p>Complete the form to enable button.</p>
+          <input type="submit" class="btn btn-primary" [disabled]="!loginForm.valid" data-bs-dismiss="modal"
+            value="Log in">
+
+          <br>
+          <h4>Values:</h4>
+          <p>Username: {{ loginForm.value | json }}</p>
+          <p>Form Status: {{ loginForm.status }}</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
