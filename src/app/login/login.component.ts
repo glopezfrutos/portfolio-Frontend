@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
-import {Validators} from '@angular/forms';
-import {FormBuilder} from '@angular/forms';
-import {Injectable} from '@angular/core';
-import {loginFormType} from '../shared/types/loginType';
-import {LoginService} from '../service/login/login.service';
-import {Router} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { loginAnswerType, loginFormType } from '../shared/types/loginType';
+import { Router } from "@angular/router";
+import { AuthService } from '../service/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +13,12 @@ import {Router} from "@angular/router";
 })
 
 @Injectable()
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  messageClass = ""
+  message = ""
+  customerId: any;
+  editData: any;
+  responseData: any;
 
   loginForm = this.fb.group({
     username: ['', Validators.required],
@@ -22,28 +27,26 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private loginService: LoginService,
-    private router: Router) {
-      localStorage.clear();
+    private authService: AuthService) {
+    localStorage.clear();
+  }
+
+  ngOnInit(): void {
   }
 
 
   submitLogin() {
-    if(this.loginForm.valid) {
-
+    if (this.loginForm.valid) {
+      this.authService
+        .procedLogin(this.loginForm.value)
+        .subscribe(result =>{
+          if(result != null) {
+            this.responseData = result;
+            localStorage.setItem("access_token", this.responseData.access_token);
+            localStorage.setItem("refresh_token", this.responseData.refresh_token);
+          }}
+        )
     }
-
-
-    let user: loginFormType = {
-      username: this.loginForm.value.username ? this.loginForm.value.username : "",
-      password: this.loginForm.value.password ? this.loginForm.value.password : ""
-    }
-
-    this.loginService
-      .postLogin(user)
-      .subscribe(data => {
-        console.log("DATA:" + JSON.stringify(data));
-      });
   }
 }
 

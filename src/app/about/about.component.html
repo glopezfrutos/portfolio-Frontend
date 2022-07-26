@@ -1,22 +1,19 @@
-<div id="about" class="row">
+<div class="row" *ngFor="let element of about">
     <div class="col-md-3">
         <div class="card">
             <div class="card-body row">
-                <h5 class="card-title">Gustavo López Frutos</h5>
-                <h6 class="card-subtitle mb-2 text-muted">PSM I | Técnico en gestión cultural</h6>
+                <h5 class="card-title">{{element.name}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{element.subtitle}}</h6>
                 <div class="col w-50">
                     <img src="../../assets/profilePhoto.jpg" class="img-thumbnail" alt="Foto">
                 </div>
                 <div class="col">
-                    <p class="card-text">Desarrollador de software<br>Gestor de proyectos</p>
+                    <p class="card-text">{{element.shortDescription}}</p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-9 fst-italic">
-        <p>Soy un desarrollador full stack web y mobile, formado en Argentina Programa y Sofka U.
-            Actualmente trabajo para Sofka. Además me dedico a la gestión cultural, actividad
-            para la que me formé en la Universidad Nacional de Tres de Febrero.
-        </p>
+        <p>{{element.longDescription}}</p>
     </div>
 </div>

@@ -22,8 +22,20 @@
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/projects">Proyectos</a>
                 </li>
+                <li *ngIf="authService.isLoggedIn()" class="nav-item">
+                    <a class="nav-link" routerLink="/admin">Admin</a>
+                </li>
             </ul>
-            <app-login></app-login>
+            <div *ngIf="authService.isLoggedIn(); then loggedIn else loggedOut"></div>
+            <ng-template #loggedIn>
+                <!-- TODO: Refactor Log Out -->
+                <button class="btn btn-danger" onclick="localStorage.clear()">Log Out</button>
+            </ng-template>
+            <ng-template #loggedOut>
+                <app-login></app-login>
+            </ng-template>
+            <div >
+            </div>
         </div>
     </div>
 </nav>
