@@ -4,8 +4,8 @@ import { AboutComponent } from './about/about.component';
 import { AdminComponent } from './admin/admin.component';
 import { EducationComponent } from './education/education.component';
 import { ExperienceComponent } from './experience/experience.component';
-import { RoleGuard } from './guard/role.guard';
 import { ProjectsComponent } from './projects/projects.component';
+import { RoleGuard } from './service/guard/role/role.guard';
 import { SkillsComponent } from './skills/skills.component';
 
 const routes: Routes = [

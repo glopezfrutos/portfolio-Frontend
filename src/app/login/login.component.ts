@@ -13,17 +13,19 @@ import { AuthService } from '../service/auth/auth.service';
 })
 
 @Injectable()
-export class LoginComponent implements OnInit {
-  messageClass = ""
-  message = ""
-  customerId: any;
-  editData: any;
-  responseData: any;
-
+export class LoginComponent {
   loginForm = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
+
+  get username() {
+    return this.loginForm.get("username")
+  }
+
+  get password() {
+    return this.loginForm.get("password")
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -31,21 +33,12 @@ export class LoginComponent implements OnInit {
     localStorage.clear();
   }
 
-  ngOnInit(): void {
-  }
-
 
   submitLogin() {
     if (this.loginForm.valid) {
       this.authService
         .procedLogin(this.loginForm.value)
-        .subscribe(result =>{
-          if(result != null) {
-            this.responseData = result;
-            localStorage.setItem("access_token", this.responseData.access_token);
-            localStorage.setItem("refresh_token", this.responseData.refresh_token);
-          }}
-        )
+        .subscribe(result => console.log(result))
     }
   }
 }

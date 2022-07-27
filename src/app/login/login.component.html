@@ -15,22 +15,33 @@
 
         <!-- Login form -->
         <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+          <!-- Username -->
           <div class="mb-3">
             <label for="username" class="form-label">Username: </label>
-            <input id="username" type="text" formControlName="username" class="form-control">
+            <input id="username" type="text" formControlName="username" [ngClass]="{'is-invalid': username?.errors && username?.touched,
+          'is-valid': !username?.errors && !username?.touched}" class="form-control">
+            <div *ngIf="username?.errors && username?.touched">
+              <p *ngIf="username?.hasError('required')" class="text-danger">
+                Por favor, ingresar el nombre de usuario.
+              </p>
+            </div>
           </div>
+
+          <!-- Password -->
           <div class="mb-3">
             <label for="password" class="form-label">Password: </label>
-            <input id="password" type="password" formControlName="password" class="form-control">
+            <input id="password" type="password" formControlName="password" [ngClass]="{'is-invalid': password?.errors && password?.touched,
+            'is-valid': !password?.errors && !password?.touched}" class="form-control">
+            <div *ngIf="password?.errors && password?.touched">
+              <p *ngIf="password?.hasError('required')" class="text-danger">
+                Por favor, ingresar la contraseña.
+              </p>
+            </div>
           </div>
-          <p>Complete the form to enable button.</p>
+
+          <!-- Submit -->
           <input type="submit" class="btn btn-primary" [disabled]="!loginForm.valid" data-bs-dismiss="modal"
             value="Log in">
-
-          <br>
-          <h4>Values:</h4>
-          <p>Username: {{ loginForm.value | json }}</p>
-          <p>Form Status: {{ loginForm.status }}</p>
         </form>
       </div>
     </div>
