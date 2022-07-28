@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AboutService } from '../service/about/about.service';
 import { About } from '../shared/types/About';
-import { faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth/auth.service';
@@ -24,6 +24,7 @@ export class AboutComponent implements OnInit {
 
   faPen = faPen;
   faCheck = faCheck;
+  faXmark = faXmark;
 
   onEdit = false;
   elementToEdit?: About;
@@ -33,10 +34,10 @@ export class AboutComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [1],
-    name: ['', Validators.required],
-    subtitle: ['', Validators.required],
-    shortDescription: ['', Validators.required],
-    longDescription: ['', Validators.required]
+    name: ['', [Validators.required, Validators.maxLength(30)]],
+    subtitle: ['', [Validators.required, Validators.maxLength(50)]],
+    shortDescription: ['', [Validators.required, Validators.maxLength(50)]],
+    longDescription: ['', [Validators.required, Validators.maxLength(600)]]
   });
 
   get id() {
@@ -69,6 +70,10 @@ export class AboutComponent implements OnInit {
       shortDescription: element.shortDescription,
       longDescription: element.longDescription
     });
+  }
+
+  cancelEdition() {
+    this.onEdit = false;
   }
 
   submitEdition() {

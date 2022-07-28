@@ -35,40 +35,80 @@
                 <div class="card">
                     <div class="card-body row">
                         <h5 class="card-title row">
-                            <div class="col-10">
+                            <div class="col-9">
                                 <input id="name" type="text" formControlName="name"
                                     [ngClass]="{'is-invalid': name?.errors && name?.touched}" class="form-control">
+                                <div *ngIf="name?.errors && name?.touched">
+                                    <p *ngIf="name?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                                        Por favor, ingresar el nombre.
+                                    </p>
+                                    <p *ngIf="name?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                        El nombre no debe superar los 30 caracteres.
+                                    </p>
+                                </div>
                             </div>
-                            <div class="col-1">
-                                <button class="btn btn-secondary" type="submit" [disabled]="!editForm.valid">
-                                    <fa-icon [icon]="faCheck"></fa-icon>
-                                </button>
+                            <div class="col-3">
+                                <div class="row justify-content-around">
+                                    <div class="col-4">
+                                        <button class="btn btn-secondary" type="submit" [disabled]="!editForm.valid">
+                                            <fa-icon [icon]="faCheck"></fa-icon>
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-secondary" type="button" (click)="cancelEdition()">
+                                            <fa-icon [icon]="faXmark"></fa-icon>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </h5>
                         <h6 class="card-subtitle mb-2 text-muted">
-                            <input id="name" type="text" formControlName="subtitle"
+                            <input id="subtitle" type="text" formControlName="subtitle"
                                 [ngClass]="{'is-invalid': subtitle?.errors && subtitle?.touched}" class="form-control">
+                            <div *ngIf="subtitle?.errors && subtitle?.touched">
+                                <p *ngIf="subtitle?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                                    Por favor, ingresar el subtítulo.
+                                </p>
+                                <p *ngIf="subtitle?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                    El subtítulo no debe superar los 50 caracteres.
+                                </p>
+                            </div>
                         </h6>
 
                         <div class="col w-50">
                             <img src="../../assets/profilePhoto.jpg" class="img-thumbnail" alt="Foto">
                         </div>
                         <div class="col">
-                            <p class="card-text">
-                                <textarea id="name" type="text" formControlName="shortDescription"
+                            <div class="card-text">
+                                <textarea id="shortDescription" type="text" formControlName="shortDescription"
                                     [ngClass]="{'is-invalid': shortDescription?.errors && shortDescription?.touched}"
                                     class="form-control" rows="5"></textarea>
-                            </p>
+                                <div *ngIf="shortDescription?.errors && shortDescription?.touched">
+                                    <p *ngIf="shortDescription?.hasError('required')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
+                                        Por favor, ingresar la descripción corta.
+                                    </p>
+                                    <p *ngIf="shortDescription?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                        La descripción corta no debe superar los 50 caracteres.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 fst-italic">
-                <p>
-                    <textarea id="name" type="text" formControlName="longDescription"
-                        [ngClass]="{'is-invalid': longDescription?.errors && longDescription?.touched}"
-                        class="form-control" rows="10"></textarea>
-                </p>
+                <textarea id="longDescription" type="text" formControlName="longDescription"
+                    [ngClass]="{'is-invalid': longDescription?.errors && longDescription?.touched}" class="form-control"
+                    rows="10"></textarea>
+                <div *ngIf="longDescription?.errors && longDescription?.touched">
+                    <p *ngIf="longDescription?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                        Por favor, ingresar la descripción.
+                    </p>
+                    <p *ngIf="longDescription?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                        La descripción no debe superar los 600 caracteres.
+                    </p>
+                </div>
             </div>
         </form>
     </ng-template>
