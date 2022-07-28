@@ -3,6 +3,8 @@ import { AboutService } from '../service/about/about.service';
 import { About } from '../shared/types/About';
 import { faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { AuthService } from '../service/auth/auth.service';
 
 @Component({
   selector: 'app-about',
@@ -10,10 +12,15 @@ import { FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
+  isLoggedIn: Observable<boolean>;
+
   constructor(
     private aboutService: AboutService,
-    private fb: FormBuilder
-  ) { }
+    private authService: AuthService,
+    private fb: FormBuilder,
+    ) {
+    this.isLoggedIn = this.authService.isLoggedIn();
+  }
 
   faPen = faPen;
   faCheck = faCheck;
@@ -69,15 +76,15 @@ export class AboutComponent implements OnInit {
     this.loading = true;
 
     if (this.editForm.valid) {
-      
+
       this.aboutService
         .putAbout(this.editForm.value)
         .subscribe(result => {
-          let index = this.about?.findIndex((element) => element.id == result.id) || -1
-          if(index == -1) this.about?.push(result)
+          let index = this.about != undefined ? this.about.findIndex((element) => element.id == result.id) : -1
+          if (index == -1) this.about?.push(result)
           this.about?.splice(index, 1, result)
           this.loading = false;
-          })
+        })
     }
   }
 }

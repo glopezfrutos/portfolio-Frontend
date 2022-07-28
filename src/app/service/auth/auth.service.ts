@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { backendUrl } from 'src/app/shared/backendUrl';
 
 
@@ -8,28 +8,41 @@ import { backendUrl } from 'src/app/shared/backendUrl';
   providedIn: 'root'
 })
 export class AuthService {
-  currentUserSubject: BehaviorSubject<any>;
+  isLoginSubject: BehaviorSubject<boolean>;
 
   constructor(
     private http: HttpClient
   ) {
-    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem("currentUser") || "{}"))
+    this.isLoginSubject = new BehaviorSubject<boolean>(this.hasAccessToken());
   }
 
-  procedLogin(user: any) {
+  private hasAccessToken(): boolean {
+    return !!localStorage.getItem('currentUser');
+  }
+
+  logIn(user: any) {
     const httpParams = new HttpParams()
       .set('username', user.username)
       .set('password', user.password);
 
     return this.http.post(backendUrl + "/login", httpParams).pipe(map(data => {
       localStorage.setItem("currentUser", JSON.stringify(data));
-      this.currentUserSubject.next(data);
+      this.isLoginSubject.next(true);
       return data;
     }))
   }
 
+  logOut() {
+    localStorage.removeItem('currentUser');
+    this.isLoginSubject.next(false);
+  }
+
+  isLoggedIn(): Observable<boolean> {
+    return this.isLoginSubject.asObservable();
+  }
+
   get currentUser() {
-    return this.currentUserSubject.value;
+    return JSON.parse(localStorage.getItem("currentUser") || "{}");
   }
 
   hasAdminAuthorization() {

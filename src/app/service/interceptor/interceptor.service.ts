@@ -21,7 +21,6 @@ export class InterceptorService implements HttpInterceptor {
             .append('Authorization', `Bearer ${currentUser.access_token}`)
             .append('Content-Type', 'application/json')
         });
-        console.log(putReq);
         return next.handle(putReq);
       }
 

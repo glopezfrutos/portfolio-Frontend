@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth/auth.service';
 
 @Component({
@@ -7,15 +8,15 @@ import { AuthService } from '../service/auth/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  isLoggedIn: Observable<boolean>;
 
   constructor(
     private authService: AuthService
-  ) { }
-
-  currentUser = this.authService.currentUser
+  ) {
+    this.isLoggedIn = authService.isLoggedIn();
+  }
 
   logOut() {
-    localStorage.clear()
-    this.authService.currentUserSubject.next({})
+    this.authService.logOut()
   }
 }

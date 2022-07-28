@@ -35,21 +35,8 @@ export class LoginComponent {
   submitLogin() {
     if (this.loginForm.valid) {
       this.authService
-        .procedLogin(this.loginForm.value)
-        .subscribe(result => console.log(result))
+        .logIn(this.loginForm.value)
+        .subscribe()
     }
   }
 }
-
-
-//   validationMessages = {
-//     'username': {
-//       'required': 'Username is required.',
-//       'minlength': 'Username must be at least 2 characters long.',
-//       'maxlength': 'Username cannot be more than 25 characters long.'
-//     },
-//     'password': {
-//       'required': 'The password is required.',
-//       'minlength': 'The password must be at least 8 characters long.'
-//     }
-//   };

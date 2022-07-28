@@ -22,13 +22,12 @@
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/projects">Proyectos</a>
                 </li>
-                <li *ngIf="currentUser && currentUser.access_token" class="nav-item">
+                <li *ngIf="isLoggedIn" class="nav-item">
                     <a class="nav-link" routerLink="/admin">Admin</a>
                 </li>
             </ul>
-            <div *ngIf="currentUser && currentUser.access_token; then loggedIn else loggedOut"></div>
+            <div *ngIf="(isLoggedIn | async); then loggedIn else loggedOut"></div>
             <ng-template #loggedIn>
-                <!-- TODO: Refactor Log Out -->
                 <button class="btn btn-danger" (click)="logOut()">Log Out</button>
             </ng-template>
             <ng-template #loggedOut>

@@ -7,7 +7,7 @@
                 <div class="card-body row">
                     <h5 class="card-title row">
                         <div class="col-10">{{element.name}}</div>
-                        <div class="col-1">
+                        <div *ngIf="(isLoggedIn | async)" class="col-1">
                             <button class="btn btn-secondary" (click)="openEdition(element)">
                                 <fa-icon [icon]="faPen"></fa-icon>
                             </button>
