@@ -10,7 +10,12 @@ export class NavbarComponent {
 
   constructor(
     private authService: AuthService
-  ) {}
+  ) { }
 
-  currentUser = this.authService.currentUser;
+  currentUser = this.authService.currentUser
+
+  logOut() {
+    localStorage.clear()
+    this.authService.currentUserSubject.next({})
+  }
 }

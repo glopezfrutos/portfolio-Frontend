@@ -1,13 +1,8 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { backendUrl } from 'src/app/shared/backendUrl';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/x-www-form-urlencoded'
-  })
-};
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +21,7 @@ export class AuthService {
       .set('username', user.username)
       .set('password', user.password);
 
-    return this.http.post(backendUrl + "/login", httpParams, httpOptions).pipe(map(data => {
+    return this.http.post(backendUrl + "/login", httpParams).pipe(map(data => {
       localStorage.setItem("currentUser", JSON.stringify(data));
       this.currentUserSubject.next(data);
       return data;

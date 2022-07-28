@@ -1,26 +1,84 @@
 <div class="row" *ngFor="let element of about">
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body row">
-                <h5 class="card-title">{{element.name}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{element.subtitle}}</h6>
-                <div class="col w-50">
-                    <img src="../../assets/profilePhoto.jpg" class="img-thumbnail" alt="Foto">
-                </div>
-                <div class="col">
-                    <p class="card-text">{{element.shortDescription}}</p>
+    <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
+    <!-- To show information -->
+    <ng-template #notOnEdition>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body row">
+                    <h5 class="card-title row">
+                        <div class="col-10">{{element.name}}</div>
+                        <div class="col-1">
+                            <button class="btn btn-secondary" (click)="openEdition(element)">
+                                <fa-icon [icon]="faPen"></fa-icon>
+                            </button>
+                        </div>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{element.subtitle}}</h6>
+                    <div class="col w-50">
+                        <img src="../../assets/profilePhoto.jpg" class="img-thumbnail" alt="Foto">
+                    </div>
+                    <div class="col">
+                        <p class="card-text">{{element.shortDescription}}</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-9 fst-italic">
-        <p>{{element.longDescription}}</p>
-    </div>
+        <div class="col-md-6 fst-italic">
+            <p>{{element.longDescription}}</p>
+        </div>
+    </ng-template>
+
+    <!-- To edit -->
+    <ng-template #onEdition>
+        <form [formGroup]="editForm" (ngSubmit)="submitEdition()" class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body row">
+                        <h5 class="card-title row">
+                            <div class="col-10">
+                                <input id="name" type="text" formControlName="name"
+                                    [ngClass]="{'is-invalid': name?.errors && name?.touched}" class="form-control">
+                            </div>
+                            <div class="col-1">
+                                <button class="btn btn-secondary" type="submit" [disabled]="!editForm.valid">
+                                    <fa-icon [icon]="faCheck"></fa-icon>
+                                </button>
+                            </div>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <input id="name" type="text" formControlName="subtitle"
+                                [ngClass]="{'is-invalid': subtitle?.errors && subtitle?.touched}" class="form-control">
+                        </h6>
+
+                        <div class="col w-50">
+                            <img src="../../assets/profilePhoto.jpg" class="img-thumbnail" alt="Foto">
+                        </div>
+                        <div class="col">
+                            <p class="card-text">
+                                <textarea id="name" type="text" formControlName="shortDescription"
+                                    [ngClass]="{'is-invalid': shortDescription?.errors && shortDescription?.touched}"
+                                    class="form-control" rows="5"></textarea>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 fst-italic">
+                <p>
+                    <textarea id="name" type="text" formControlName="longDescription"
+                        [ngClass]="{'is-invalid': longDescription?.errors && longDescription?.touched}"
+                        class="form-control" rows="10"></textarea>
+                </p>
+            </div>
+        </form>
+    </ng-template>
 </div>
-<div [hidden]="about">
+
+<!-- Spinner -->
+<div *ngIf="about == undefined || loading">
     <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Loading...</span>
         </div>
-      </div>
+    </div>
 </div>

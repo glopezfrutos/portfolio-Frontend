@@ -22,4 +22,8 @@ export class AboutService {
   getAbout(): Observable<About[]>{
     return this.http.get<About[]>(backendUrl + "/portfolio/about", httpOptions)
   }
+
+  putAbout(about: any){
+    return this.http.put<About>(backendUrl + "/portfolio/about", about)
+  }
 }
