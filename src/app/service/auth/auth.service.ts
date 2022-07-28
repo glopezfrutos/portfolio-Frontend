@@ -62,4 +62,11 @@ export class AuthService {
     return isAdmin;
   }
 
+  refreshToken() {
+    return this.http.get(backendUrl + "/refreshtoken").pipe(map(data => {
+      localStorage.setItem("currentUser", JSON.stringify(data));
+      this.isLoginSubject.next(true);
+      return data;
+    }))
+  }
 }
