@@ -2,7 +2,7 @@
     <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
     <!-- To show information -->
     <ng-template #notOnEdition>
-        <div class="col-md-6">
+        <div class="col-sm-6">
             <div class="card">
                 <div class="card-body row">
                     <h5 class="card-title row">
@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 fst-italic">
+        <div class="col-sm-6 fst-italic">
             <p>{{element.longDescription}}</p>
         </div>
     </ng-template>
@@ -31,7 +31,7 @@
     <!-- To edit -->
     <ng-template #onEdition>
         <form [formGroup]="editForm" (ngSubmit)="submitEdition()" class="row">
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body row">
                         <h5 class="card-title row">
@@ -97,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 fst-italic">
+            <div class="col-sm-6 fst-italic">
                 <textarea id="longDescription" type="text" formControlName="longDescription"
                     [ngClass]="{'is-invalid': longDescription?.errors && longDescription?.touched}" class="form-control"
                     rows="10"></textarea>
