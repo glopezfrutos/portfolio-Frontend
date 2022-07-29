@@ -57,7 +57,7 @@ export class AboutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.aboutService.getAbout().subscribe(about => this.about = about)
+    this.aboutService.getAll().subscribe(about => this.about = about)
   }
 
   openEdition(element: About) {
@@ -83,7 +83,7 @@ export class AboutComponent implements OnInit {
     if (this.editForm.valid) {
 
       this.aboutService
-        .putAbout(this.editForm.value)
+        .put(this.editForm.value)
         .subscribe(result => {
           let index = this.about != undefined ? this.about.findIndex((element) => element.id == result.id) : -1
           if (index == -1) this.about?.push(result)
