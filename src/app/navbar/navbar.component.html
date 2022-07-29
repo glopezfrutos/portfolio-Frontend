@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-light">
+<nav id="topheader" class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
         <img src="../../assets/logoArgentinaPrograma.png" alt="" width="69" height="24">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -8,7 +8,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="about" routerLink="/about">Acerca de</a>
+                    <a class="nav-link" aria-current="about" routerLink="/about">Acerca de</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/experience">Experiencia</a>
@@ -38,3 +38,11 @@
         </div>
     </div>
 </nav>
+<script>
+    $( '#topheader .navbar-nav a' ).on('click', 
+                function () {
+        $( '#topheader .navbar-nav' ).find( 'li.active' )
+        .removeClass( 'active' );
+        $( this ).parent( 'li' ).addClass( 'active' );
+    });
+</script>
