@@ -1,13 +1,105 @@
-<hr>
 <h3>Experiencia</h3>
-<div class="row">
-    <div class="col-3 order-last">
-        <img src="../../assets/logoSofka.png" class="img-thumbnail" alt="Foto">
-    </div>
-    <div class="col-9">
-        <h6>Sofka</h6>
-        <p class="fst-italic">Consultor de desarrollo</p>
-        <p>Desarrollador full stack web y mobile bilingüe</p>
-        <br>
+
+
+<div class="row mt-3" *ngFor="let element of experience">
+    <hr>
+    <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
+    <!-- To show information -->
+    <ng-template #notOnEdition>
+        <div class="col-3 order-last">
+            <img src={{element.imgUrl}} class="img-thumbnail" alt="Logo {{element.company}}">
+        </div>
+        <div class="col-9">
+            <div class="row">
+                <h6 class="col-9">{{element.company}}</h6>
+                <div *ngIf="(isLoggedIn | async)" class="col-1">
+                    <button class="btn btn-secondary" (click)="openEdition(element)">
+                        <fa-icon [icon]="faPen"></fa-icon>
+                    </button>
+                </div>
+            </div>
+            <p class="fst-italic">{{element.role}}</p>
+            <p>{{element.description}}</p>
+            <br>
+        </div>
+    </ng-template>
+
+    <!-- To edit -->
+    <ng-template #onEdition>
+        <form [formGroup]="form" (ngSubmit)="submitEdition()" class="row">
+            <div class="col-3 order-last">
+                <textarea type="text" formControlName="imgUrl" rows="5"
+                    [ngClass]="{'is-invalid': imgUrl?.errors && imgUrl?.touched}" class="form-control"></textarea>
+                <div *ngIf="imgUrl?.errors && imgUrl?.touched">
+                    <p *ngIf="imgUrl?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                        Por favor, ingresar el link a la imagen.
+                    </p>
+                    <p *ngIf="imgUrl?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                        El link a la imagen no debe superar los 150 caracteres.
+                    </p>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <h6 class="col-9">
+                        <input type="text" formControlName="company"
+                            [ngClass]="{'is-invalid': company?.errors && company?.touched}" class="form-control">
+                        <div *ngIf="company?.errors && company?.touched">
+                            <p *ngIf="company?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                                Por favor, ingresar el link a la imagen.
+                            </p>
+                            <p *ngIf="company?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                El link a la imagen no debe superar los 150 caracteres.
+                            </p>
+                        </div>
+                    </h6>
+                    <div class="col-3">
+                        <div class="row justify-content-around">
+                            <div class="col-4">
+                                <button class="btn btn-secondary" type="submit" [disabled]="!form.valid">
+                                    <fa-icon [icon]="faCheck"></fa-icon>
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-secondary" type="button" (click)="cancelEdition()">
+                                    <fa-icon [icon]="faXmark"></fa-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="text" formControlName="role" [ngClass]="{'is-invalid': role?.errors && role?.touched}"
+                    class="form-control">
+                <div *ngIf="role?.errors && role?.touched">
+                    <p *ngIf="role?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                        Por favor, ingresar el link a la imagen.
+                    </p>
+                    <p *ngIf="role?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                        El link a la imagen no debe superar los 150 caracteres.
+                    </p>
+                </div>
+                <input type="text" formControlName="description"
+                    [ngClass]="{'is-invalid': description?.errors && description?.touched}" class="form-control">
+                <div *ngIf="description?.errors && description?.touched">
+                    <p *ngIf="description?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                        Por favor, ingresar el link a la imagen.
+                    </p>
+                    <p *ngIf="description?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                        El link a la imagen no debe superar los 150 caracteres.
+                    </p>
+                </div>
+                <br>
+            </div>
+        </form>
+    </ng-template>
+</div>
+
+<!-- Spinner -->
+<div *ngIf="experience == undefined || loading">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
 </div>
