@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Experience } from '../shared/types/Experience';
-import { faPen, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faCheck, faXmark, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -31,8 +31,11 @@ export class ExperienceComponent implements OnInit {
   faPen = faPen
   faCheck = faCheck
   faXmark = faXmark
+  faTrash = faTrash
+  faPlus = faPlus
 
   onEdit = false;
+  onNewElement = false;
   elementToEdit?: Experience;
   loading = false;
 
@@ -74,15 +77,33 @@ export class ExperienceComponent implements OnInit {
     });
   }
 
-  cancelEdition() {
-    this.onEdit = false;
+  newElement() {
+    this.elementToEdit = { id: undefined, company: "", role: "", description: "", imgUrl: "" }
+    this.experience?.push(this.elementToEdit)
+    this.onNewElement = true;
+    this.onEdit = true;
+    this.form.patchValue({
+      id: this.elementToEdit.id,
+      company: this.elementToEdit.company,
+      role: this.elementToEdit.role,
+      description: this.elementToEdit.description,
+      imgUrl: this.elementToEdit.imgUrl
+    });
   }
 
-  submitEdition() {
+  cancelForm() {
+    this.onEdit = false;
+    if (this.onNewElement) {
+      this.experience?.splice(-1, 1);
+      this.onNewElement = false;
+    }
+  }
+
+  submitForm() {
     this.onEdit = false;
     this.loading = true;
 
-    if (this.form.valid) {
+    if (this.form.valid && !this.onNewElement) {
       this.experienceService
         .put(this.form.value)
         .subscribe(result => {
@@ -91,6 +112,36 @@ export class ExperienceComponent implements OnInit {
           this.experience?.splice(index, 1, result)
           this.loading = false;
         })
+    }
+
+    if (this.form.valid && this.onNewElement) {
+      this.experienceService
+        .post(this.form.value)
+        .subscribe(result => {
+          this.experience?.splice(-1, 1, result)
+          this.loading = false;
+        });
+      this.onNewElement = false;
+    }
+  }
+
+  delete(id?: number) {
+    this.onEdit = false;
+    this.loading = true;
+
+    if (!this.onNewElement) {
+      this.experienceService
+        .delete(id)
+        .subscribe(() => {
+          let index = this.experience != undefined ? this.experience.findIndex((element) => element.id == id) : -1
+          this.experience?.splice(index, 1)
+          this.loading = false;
+        });
+    }
+
+    if (this.onNewElement) {
+      this.cancelForm();
+      this.loading = false;
     }
   }
 }

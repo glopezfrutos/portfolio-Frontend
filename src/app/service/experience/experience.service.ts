@@ -25,7 +25,7 @@ export class ExperienceService {
     return this.http.post<Experience>(backendUrl + "/portfolio/experience", formValue)
   }
 
-  delete(id: number): Observable<void> {
+  delete(id?: number): Observable<void> {
     return this.http.delete<void>(backendUrl + "/portfolio/experience/" + id)
   }
 }

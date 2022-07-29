@@ -1,21 +1,35 @@
-<h3>Experiencia</h3>
-
-
+<div class="row">
+    <h3 class="col-9">Experiencia</h3>
+    <div *ngIf="(isLoggedIn | async)" class="col-1 ms-auto">
+        <button class="btn btn-primary" type="button" [disabled]="onNewElement" (click)="newElement()">
+            <fa-icon [icon]="faPlus"></fa-icon>
+        </button>
+    </div>
+</div>
 <div class="row mt-3" *ngFor="let element of experience">
     <hr>
     <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
     <!-- To show information -->
     <ng-template #notOnEdition>
-        <div class="col-3 order-last">
+        <div class="col-sm-3 order-last">
             <img src={{element.imgUrl}} class="img-thumbnail" alt="Logo {{element.company}}">
         </div>
-        <div class="col-9">
+        <div class="col-sm-9">
             <div class="row">
                 <h6 class="col-9">{{element.company}}</h6>
-                <div *ngIf="(isLoggedIn | async)" class="col-1">
-                    <button class="btn btn-secondary" (click)="openEdition(element)">
-                        <fa-icon [icon]="faPen"></fa-icon>
-                    </button>
+                <div *ngIf="(isLoggedIn | async)" class="col-3">
+                    <div class="row justify-content-around">
+                        <div class="col-sm-4">
+                            <button class="btn btn-secondary" (click)="openEdition(element)">
+                                <fa-icon [icon]="faPen"></fa-icon>
+                            </button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn btn-danger" type="button" (click)="delete(element.id)">
+                                <fa-icon [icon]="faTrash"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <p class="fst-italic">{{element.role}}</p>
@@ -26,9 +40,9 @@
 
     <!-- To edit -->
     <ng-template #onEdition>
-        <form [formGroup]="form" (ngSubmit)="submitEdition()" class="row">
-            <div class="col-3 order-last">
-                <textarea type="text" formControlName="imgUrl" rows="5"
+        <form [formGroup]="form" (ngSubmit)="submitForm()" class="row">
+            <div class="col-sm-3 order-last">
+                <textarea placeholder="Link de la imagen" type="text" formControlName="imgUrl" rows="5"
                     [ngClass]="{'is-invalid': imgUrl?.errors && imgUrl?.touched}" class="form-control"></textarea>
                 <div *ngIf="imgUrl?.errors && imgUrl?.touched">
                     <p *ngIf="imgUrl?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
@@ -39,17 +53,17 @@
                     </p>
                 </div>
             </div>
-            <div class="col-9">
+            <div class="col-sm-9">
                 <div class="row">
                     <h6 class="col-9">
                         <input type="text" formControlName="company"
                             [ngClass]="{'is-invalid': company?.errors && company?.touched}" class="form-control">
                         <div *ngIf="company?.errors && company?.touched">
                             <p *ngIf="company?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
-                                Por favor, ingresar el link a la imagen.
+                                Por favor, ingresar el nombre de la compañía.
                             </p>
                             <p *ngIf="company?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
-                                El link a la imagen no debe superar los 150 caracteres.
+                                El nombre de la compañía no debe superar los 30 caracteres.
                             </p>
                         </div>
                     </h6>
@@ -61,7 +75,7 @@
                                 </button>
                             </div>
                             <div class="col-4">
-                                <button class="btn btn-secondary" type="button" (click)="cancelEdition()">
+                                <button class="btn btn-secondary" type="button" (click)="cancelForm()">
                                     <fa-icon [icon]="faXmark"></fa-icon>
                                 </button>
                             </div>
@@ -73,20 +87,20 @@
                     class="form-control">
                 <div *ngIf="role?.errors && role?.touched">
                     <p *ngIf="role?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
-                        Por favor, ingresar el link a la imagen.
+                        Por favor, ingresar el puesto.
                     </p>
                     <p *ngIf="role?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
-                        El link a la imagen no debe superar los 150 caracteres.
+                        El puesto no debe superar los 30 caracteres.
                     </p>
                 </div>
                 <input type="text" formControlName="description"
                     [ngClass]="{'is-invalid': description?.errors && description?.touched}" class="form-control">
                 <div *ngIf="description?.errors && description?.touched">
                     <p *ngIf="description?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
-                        Por favor, ingresar el link a la imagen.
+                        Por favor, ingresar la descripción del puesto.
                     </p>
                     <p *ngIf="description?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
-                        El link a la imagen no debe superar los 150 caracteres.
+                        La descripción no debe superar los 150 caracteres.
                     </p>
                 </div>
                 <br>
