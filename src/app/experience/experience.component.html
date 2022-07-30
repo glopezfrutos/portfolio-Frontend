@@ -6,12 +6,12 @@
         </button>
     </div>
 </div>
-<div class="row mt-3" *ngFor="let element of experience">
+<div class="row mt-3" *ngFor="let element of experience; index as i">
     <hr>
     <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
     <!-- To show information -->
     <ng-template #notOnEdition>
-        <div class="col-sm-3 order-last">
+        <div class="col-sm-3 {{i % 2 ? '' : 'order-last'}}">
             <img src={{element.imgUrl}} class="img-thumbnail" alt="Logo {{element.company}}">
         </div>
         <div class="col-sm-9">
@@ -41,7 +41,7 @@
     <!-- To edit -->
     <ng-template #onEdition>
         <form [formGroup]="form" (ngSubmit)="submitForm()" class="row">
-            <div class="col-sm-3 order-last">
+            <div class="col-sm-3 {{i % 2 ? '' : 'order-last'}}">
                 <textarea placeholder="Link de la imagen" type="text" formControlName="imgUrl" rows="5"
                     [ngClass]="{'is-invalid': imgUrl?.errors && imgUrl?.touched}" class="form-control"></textarea>
                 <div *ngIf="imgUrl?.errors && imgUrl?.touched">
@@ -56,7 +56,7 @@
             <div class="col-sm-9">
                 <div class="row">
                     <h6 class="col-9">
-                        <input type="text" formControlName="company"
+                        <input type="text" formControlName="company" placeholder="Empresa"
                             [ngClass]="{'is-invalid': company?.errors && company?.touched}" class="form-control">
                         <div *ngIf="company?.errors && company?.touched">
                             <p *ngIf="company?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
@@ -70,7 +70,7 @@
                     <div class="col-3">
                         <div class="row justify-content-around">
                             <div class="col-4">
-                                <button class="btn btn-secondary" type="submit" [disabled]="!form.valid">
+                                <button class="btn btn-primary" type="submit" [disabled]="!form.valid">
                                     <fa-icon [icon]="faCheck"></fa-icon>
                                 </button>
                             </div>
@@ -83,7 +83,8 @@
                     </div>
                 </div>
 
-                <input type="text" formControlName="role" [ngClass]="{'is-invalid': role?.errors && role?.touched}"
+                <input type="text" formControlName="role" placeholder="Puesto"
+                [ngClass]="{'is-invalid': role?.errors && role?.touched}"
                     class="form-control">
                 <div *ngIf="role?.errors && role?.touched">
                     <p *ngIf="role?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
@@ -93,7 +94,7 @@
                         El puesto no debe superar los 30 caracteres.
                     </p>
                 </div>
-                <input type="text" formControlName="description"
+                <input type="text" formControlName="description" placeholder="Descripción"
                     [ngClass]="{'is-invalid': description?.errors && description?.touched}" class="form-control">
                 <div *ngIf="description?.errors && description?.touched">
                     <p *ngIf="description?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
