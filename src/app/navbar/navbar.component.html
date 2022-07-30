@@ -22,7 +22,7 @@
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/projects">Proyectos</a>
                 </li>
-                <li *ngIf="isLoggedIn" class="nav-item">
+                <li *ngIf="(isLoggedIn | async)" class="nav-item">
                     <a class="nav-link" routerLink="/admin">Admin</a>
                 </li>
             </ul>
