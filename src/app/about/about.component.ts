@@ -37,7 +37,8 @@ export class AboutComponent implements OnInit {
     name: ['', [Validators.required, Validators.maxLength(30)]],
     subtitle: ['', [Validators.required, Validators.maxLength(50)]],
     shortDescription: ['', [Validators.required, Validators.maxLength(50)]],
-    longDescription: ['', [Validators.required, Validators.maxLength(600)]]
+    longDescription: ['', [Validators.required, Validators.maxLength(600)]],
+    imgUrl: ['', [Validators.required, Validators.maxLength(1500)]]
   });
 
   get id() {
@@ -55,6 +56,9 @@ export class AboutComponent implements OnInit {
   get longDescription() {
     return this.editForm.get("longDescription")
   }
+  get imgUrl() {
+    return this.editForm.get("imgUrl")
+  }
 
   ngOnInit(): void {
     this.aboutService.getAll().subscribe(about => this.about = about)
@@ -68,7 +72,8 @@ export class AboutComponent implements OnInit {
       name: element.name,
       subtitle: element.subtitle,
       shortDescription: element.shortDescription,
-      longDescription: element.longDescription
+      longDescription: element.longDescription,
+      imgUrl: element.imgUrl
     });
   }
 

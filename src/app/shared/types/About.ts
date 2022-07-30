@@ -4,4 +4,5 @@ export interface About {
     subtitle: string;
     shortDescription: string;
     longDescription: string;
+    imgUrl: string;
 }

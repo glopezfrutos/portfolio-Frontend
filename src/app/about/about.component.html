@@ -15,7 +15,7 @@
                     </h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{element.subtitle}}</h6>
                     <div class="col w-50">
-                        <img src="../../assets/profilePhoto.jpg" class="img-thumbnail" alt="Foto">
+                        <img src={{element.imgUrl}} class="img-thumbnail" alt="Foto">
                     </div>
                     <div class="col">
                         <p class="card-text">{{element.shortDescription}}</p>
@@ -36,13 +36,14 @@
                     <div class="card-body row">
                         <h5 class="card-title row">
                             <div class="col-9">
-                                <input id="name" type="text" formControlName="name"
+                                <input id="name" type="text" placeholder="Nombre" formControlName="name"
                                     [ngClass]="{'is-invalid': name?.errors && name?.touched}" class="form-control">
                                 <div *ngIf="name?.errors && name?.touched">
                                     <p *ngIf="name?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
                                         Por favor, ingresar el nombre.
                                     </p>
-                                    <p *ngIf="name?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                    <p *ngIf="name?.hasError('maxlength')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
                                         El nombre no debe superar los 30 caracteres.
                                     </p>
                                 </div>
@@ -63,24 +64,35 @@
                             </div>
                         </h5>
                         <h6 class="card-subtitle mb-2 text-muted">
-                            <input id="subtitle" type="text" formControlName="subtitle"
+                            <input id="subtitle" type="text" placeholder="Subtítulo" formControlName="subtitle"
                                 [ngClass]="{'is-invalid': subtitle?.errors && subtitle?.touched}" class="form-control">
                             <div *ngIf="subtitle?.errors && subtitle?.touched">
                                 <p *ngIf="subtitle?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
                                     Por favor, ingresar el subtítulo.
                                 </p>
-                                <p *ngIf="subtitle?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                <p *ngIf="subtitle?.hasError('maxlength')"
+                                    class="text-danger fs-6 fw-normal fst-normal">
                                     El subtítulo no debe superar los 50 caracteres.
                                 </p>
                             </div>
                         </h6>
 
                         <div class="col w-50">
-                            <img src="../../assets/profilePhoto.jpg" class="img-thumbnail" alt="Foto">
+                            <textarea placeholder="Link de la imagen" type="text" formControlName="imgUrl" rows="5"
+                                [ngClass]="{'is-invalid': imgUrl?.errors && imgUrl?.touched}"
+                                class="form-control"></textarea>
+                            <div *ngIf="imgUrl?.errors && imgUrl?.touched">
+                                <p *ngIf="imgUrl?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                                    Por favor, ingresar el link a la imagen.
+                                </p>
+                                <p *ngIf="imgUrl?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                    El link a la imagen no debe superar los 1500 caracteres.
+                                </p>
+                            </div>
                         </div>
                         <div class="col">
                             <div class="card-text">
-                                <textarea id="shortDescription" type="text" formControlName="shortDescription"
+                                <textarea id="shortDescription" type="text" placeholder="Descripción corta" formControlName="shortDescription"
                                     [ngClass]="{'is-invalid': shortDescription?.errors && shortDescription?.touched}"
                                     class="form-control" rows="5"></textarea>
                                 <div *ngIf="shortDescription?.errors && shortDescription?.touched">
@@ -88,7 +100,8 @@
                                         class="text-danger fs-6 fw-normal fst-normal">
                                         Por favor, ingresar la descripción corta.
                                     </p>
-                                    <p *ngIf="shortDescription?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                    <p *ngIf="shortDescription?.hasError('maxlength')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
                                         La descripción corta no debe superar los 50 caracteres.
                                     </p>
                                 </div>
@@ -98,7 +111,7 @@
                 </div>
             </div>
             <div class="col-sm-6 fst-italic">
-                <textarea id="longDescription" type="text" formControlName="longDescription"
+                <textarea id="longDescription" type="text" placeholder="Descripción" formControlName="longDescription"
                     [ngClass]="{'is-invalid': longDescription?.errors && longDescription?.touched}" class="form-control"
                     rows="10"></textarea>
                 <div *ngIf="longDescription?.errors && longDescription?.touched">
