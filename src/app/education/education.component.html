@@ -13,7 +13,7 @@
         <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
         <!-- To show information -->
         <ng-template #notOnEdition>
-            <div class="col-sm-3 {{i % 2 ? '' : 'order-last'}}">
+            <div class="col-sm-3 {{i % 2 ? '' : 'order-sm-last'}}">
                 <img src={{element.imgUrl}} class="img-thumbnail" alt="Logo {{element.institution}}">
             </div>
             <div class="col-sm-9">
@@ -43,7 +43,7 @@
         <!-- To edit -->
         <ng-template #onEdition>
             <form [formGroup]="form" (ngSubmit)="submitForm()" class="row">
-                <div class="col-sm-3 {{i % 2 ? '' : 'order-last'}}">
+                <div class="col-sm-3 {{i % 2 ? '' : 'order-sm-last'}}">
                     <textarea placeholder="Link de la imagen" type="text" formControlName="imgUrl" rows="5"
                         [ngClass]="{'is-invalid': imgUrl?.errors && imgUrl?.touched}" class="form-control"></textarea>
                     <div *ngIf="imgUrl?.errors && imgUrl?.touched">
