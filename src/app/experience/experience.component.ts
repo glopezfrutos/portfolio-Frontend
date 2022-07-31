@@ -45,7 +45,7 @@ export class ExperienceComponent implements OnInit {
     company: ['', [Validators.required, Validators.maxLength(30)]],
     role: ['', [Validators.required, Validators.maxLength(30)]],
     description: ['', [Validators.required, Validators.maxLength(500)]],
-    imgUrl: ['', [Validators.required, Validators.maxLength(150)]]
+    imgUrl: ['', [Validators.required, Validators.maxLength(1500)]]
   });
 
 

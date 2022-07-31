@@ -49,7 +49,7 @@
                         Por favor, ingresar el link a la imagen.
                     </p>
                     <p *ngIf="imgUrl?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
-                        El link a la imagen no debe superar los 150 caracteres.
+                        El link a la imagen no debe superar los 1500 caracteres.
                     </p>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                         Por favor, ingresar la descripción del puesto.
                     </p>
                     <p *ngIf="description?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
-                        La descripción no debe superar los 150 caracteres.
+                        La descripción no debe superar los 500 caracteres.
                     </p>
                 </div>
                 <br>
