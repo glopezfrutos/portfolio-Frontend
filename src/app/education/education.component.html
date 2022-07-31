@@ -1,17 +1,122 @@
-<hr>
 <h3>Educación</h3>
-<div class="row">
-    <h5>Universitaria</h5>
-    <div class="col-3">
-        <img src="../../assets/logoUntref.png" class="img-thumbnail" alt="Foto">
+<div class="row mt-3" *ngFor="let category of categoriesToShow">
+    <div class="row">
+        <h5 class="col-9">{{category.toShow}}</h5>
+        <div *ngIf="(isLoggedIn | async)" class="col-1 ms-auto">
+            <button class="btn btn-primary" type="button" [disabled]="onNewElement" (click)="newElement(category.cat)">
+                <fa-icon [icon]="faPlus"></fa-icon>
+            </button>
+        </div>
     </div>
-    <div class="col-9">
-        <h6>Universidad Nacional de Tres de Febrero</h6>
-        <p class="fst-italic">Licenciatura en gestión del arte y la cultura</p>
-        <p>Tesis de grado en desarrollo.<br>
-            Técnico en Gestión del Arte y la Cultura (2020)</p>
-        <br>
+    <div class="row mt-3" *ngFor="let element of getEducation(category.cat); index as i">
+        <hr>
+        <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
+        <!-- To show information -->
+        <ng-template #notOnEdition>
+            <div class="col-sm-3 {{i % 2 ? '' : 'order-last'}}">
+                <img src={{element.imgUrl}} class="img-thumbnail" alt="Logo {{element.institution}}">
+            </div>
+            <div class="col-sm-9">
+                <div class="row">
+                    <h6 class="col-9">{{element.institution}}</h6>
+                    <div *ngIf="(isLoggedIn | async)" class="col-3">
+                        <div class="row justify-content-around">
+                            <div class="col-sm-4">
+                                <button class="btn btn-secondary" (click)="openEdition(element)">
+                                    <fa-icon [icon]="faPen"></fa-icon>
+                                </button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-danger" type="button" (click)="delete(element.id)">
+                                    <fa-icon [icon]="faTrash"></fa-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="fst-italic">{{element.title}}</p>
+                <p>{{element.description}}</p>
+                <br>
+            </div>
+        </ng-template>
+
+        <!-- To edit -->
+        <ng-template #onEdition>
+            <form [formGroup]="form" (ngSubmit)="submitForm()" class="row">
+                <div class="col-sm-3 {{i % 2 ? '' : 'order-last'}}">
+                    <textarea placeholder="Link de la imagen" type="text" formControlName="imgUrl" rows="5"
+                        [ngClass]="{'is-invalid': imgUrl?.errors && imgUrl?.touched}" class="form-control"></textarea>
+                    <div *ngIf="imgUrl?.errors && imgUrl?.touched">
+                        <p *ngIf="imgUrl?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                            Por favor, ingresar el link a la imagen.
+                        </p>
+                        <p *ngIf="imgUrl?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                            El link a la imagen no debe superar los 1500 caracteres.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="row">
+                        <h6 class="col-9">
+                            <input type="text" formControlName="institution" placeholder="Institución"
+                                [ngClass]="{'is-invalid': institution?.errors && institution?.touched}" class="form-control">
+                            <div *ngIf="institution?.errors && institution?.touched">
+                                <p *ngIf="institution?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                                    Por favor, ingresar el nombre de la institución.
+                                </p>
+                                <p *ngIf="institution?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                    El nombre de la institución no debe superar los 100 caracteres.
+                                </p>
+                            </div>
+                        </h6>
+                        <div class="col-3">
+                            <div class="row justify-content-around">
+                                <div class="col-4">
+                                    <button class="btn btn-primary" type="submit" [disabled]="!form.valid">
+                                        <fa-icon [icon]="faCheck"></fa-icon>
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-secondary" type="button" (click)="cancelForm()">
+                                        <fa-icon [icon]="faXmark"></fa-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="text" formControlName="title" placeholder="Título"
+                        [ngClass]="{'is-invalid': title?.errors && title?.touched}" class="form-control">
+                    <div *ngIf="title?.errors && title?.touched">
+                        <p *ngIf="title?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                            Por favor, ingresar el título.
+                        </p>
+                        <p *ngIf="title?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                            El título no debe superar los 30 caracteres.
+                        </p>
+                    </div>
+                    <textarea type="text" formControlName="description" placeholder="Descripción"
+                        [ngClass]="{'is-invalid': description?.errors && description?.touched}" class="form-control"></textarea>
+                    <div *ngIf="description?.errors && description?.touched">
+                        <p *ngIf="description?.hasError('required')" class="text-danger fs-6 fw-normal fst-normal">
+                            Por favor, ingresar la descripción.
+                        </p>
+                        <p *ngIf="description?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                            La descripción no debe superar los 500 caracteres.
+                        </p>
+                    </div>
+                    <br>
+                </div>
+            </form>
+        </ng-template>
     </div>
-    <h5>Certificaciones</h5>
-    <h5>Cursos</h5>
+</div>
+
+<!-- Spinner -->
+<div *ngIf="education == undefined || loading">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </div>
