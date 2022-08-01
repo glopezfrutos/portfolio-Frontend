@@ -89,6 +89,7 @@ export class EducationComponent implements OnInit {
   openEdition(element: Education) {
     this.elementToEdit = element;
     this.onEdit = true;
+    this.form.reset()
     this.form.patchValue({
       id: element.id,
       institution: element.institution,

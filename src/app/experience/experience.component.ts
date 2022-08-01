@@ -68,6 +68,7 @@ export class ExperienceComponent implements OnInit {
   openEdition(element: Experience) {
     this.elementToEdit = element;
     this.onEdit = true;
+    this.form.reset()
     this.form.patchValue({
       id: element.id,
       company: element.company,
