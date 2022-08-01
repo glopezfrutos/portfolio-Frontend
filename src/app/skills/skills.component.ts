@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Education } from '../shared/types/Education';
 import { faPen, faCheck, faXmark, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { EducationService } from '../service/education/education.service';
+import { SkillsService } from '../service/skills/skills.service';
+import { Skills } from '../shared/types/Skills';
 
 @Component({
   selector: 'app-skills',
@@ -15,14 +15,14 @@ export class SkillsComponent implements OnInit {
   isLoggedIn: Observable<boolean>;
 
   constructor(
-    private educationService: EducationService,
+    private skillsService: SkillsService,
     private authService: AuthService,
     private fb: FormBuilder,
   ) {
     this.isLoggedIn = this.authService.isLoggedIn();
   }
 
-  education?: Education[];
+  skills?: Skills[];
   categoriesToShow = [
     {
       "cat": 'HARD',
@@ -30,16 +30,16 @@ export class SkillsComponent implements OnInit {
     },
     {
       "cat": 'SOFT',
-      "toShow": "Habilidades blancas"
+      "toShow": "Habilidades blandas"
     }
   ]
 
-  getEducation(educationCategory: string) {
-    return this.education?.filter(element => element.educationCategory == educationCategory)
+  getSkills(category: string) {
+    return this.skills?.filter(element => element.skillCategory == category)
   }
 
   ngOnInit(): void {
-    this.educationService.getAll().subscribe(education => this.education = education)
+    this.skillsService.getAll().subscribe(education => this.skills = education)
   }
 
   faPen = faPen
@@ -50,71 +50,65 @@ export class SkillsComponent implements OnInit {
 
   onEdit = false;
   onNewElement = false;
-  elementToEdit?: Education;
+  elementToEdit?: Skills;
   loading = false;
 
 
   form = this.fb.group({
     id: [1],
-    institution: ['', [Validators.required, Validators.maxLength(100)]],
-    title: ['', [Validators.required, Validators.maxLength(100)]],
+    skillName: ['', [Validators.required, Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.maxLength(500)]],
-    imgUrl: ['', [Validators.required, Validators.maxLength(1500)]],
-    educationCategory: ['', [Validators.required]],
+    percentage: [50, [Validators.required]],
+    skillCategory: ['', [Validators.required]],
   });
-
 
   get id() {
     return this.form.get("id")
   }
-  get institution() {
-    return this.form.get("institution")
-  }
-  get title() {
-    return this.form.get("title")
+  get skillName() {
+    return this.form.get("skillName")
   }
   get description() {
     return this.form.get("description")
   }
-  get imgUrl() {
-    return this.form.get("imgUrl")
+  get percentage() {
+    return this.form.get("percentage")
   }
-  get educationCategory() {
-    return this.form.get("educationCategory")
+  get skillCategory() {
+    return this.form.get("skillCategory")
   }
 
-  openEdition(element: Education) {
+  openEdition(element: Skills) {
     this.elementToEdit = element;
     this.onEdit = true;
     this.form.patchValue({
       id: element.id,
-      institution: element.institution,
-      title: element.title,
+      skillName: element.skillName,
       description: element.description,
-      imgUrl: element.imgUrl,
-      educationCategory: element.educationCategory
+      percentage: element.percentage,
+      skillCategory: element.skillCategory
     });
   }
 
-  newElement(educationCategory: string) {
-    this.elementToEdit = { id: undefined, institution: "", title: "", description: "", imgUrl: "", educationCategory: educationCategory }
-    this.education?.push(this.elementToEdit)
+  newElement(skillCategory: string) {
+    this.elementToEdit = { id: undefined, skillName: "", description: "", percentage: 50, skillCategory: skillCategory }
+    this.skills?.push(this.elementToEdit)
     this.onNewElement = true;
     this.onEdit = true;
+    this.form.reset()
     this.form.patchValue({
       id: this.elementToEdit.id,
-      institution: this.elementToEdit.institution,
-      title: this.elementToEdit.title,
+      skillName: this.elementToEdit.skillName,
       description: this.elementToEdit.description,
-      imgUrl: this.elementToEdit.imgUrl,
-      educationCategory: this.elementToEdit.educationCategory
+      percentage: this.elementToEdit.percentage,
+      skillCategory: this.elementToEdit.skillCategory
     });
   }
 
   cancelForm() {
     this.onEdit = false;
     if (this.onNewElement) {
-      this.education?.splice(-1, 1);
+      this.skills?.splice(-1, 1);
       this.onNewElement = false;
     }
   }
@@ -124,21 +118,21 @@ export class SkillsComponent implements OnInit {
     this.loading = true;
 
     if (this.form.valid && !this.onNewElement) {
-      this.educationService
+      this.skillsService
         .put(this.form.value)
         .subscribe(result => {
-          let index = this.education != undefined ? this.education.findIndex((element) => element.id == result.id) : -1
-          if (index == -1) this.education?.push(result)
-          this.education?.splice(index, 1, result)
+          let index = this.skills != undefined ? this.skills.findIndex((element) => element.id == result.id) : -1
+          if (index == -1) this.skills?.push(result)
+          this.skills?.splice(index, 1, result)
           this.loading = false;
         })
     }
 
     if (this.form.valid && this.onNewElement) {
-      this.educationService
+      this.skillsService
         .post(this.form.value)
         .subscribe(result => {
-          this.education?.splice(-1, 1, result)
+          this.skills?.splice(-1, 1, result)
           this.loading = false;
         });
       this.onNewElement = false;
@@ -150,11 +144,11 @@ export class SkillsComponent implements OnInit {
     this.loading = true;
 
     if (!this.onNewElement) {
-      this.educationService
+      this.skillsService
         .delete(id)
         .subscribe(() => {
-          let index = this.education != undefined ? this.education.findIndex((element) => element.id == id) : -1
-          this.education?.splice(index, 1)
+          let index = this.skills != undefined ? this.skills.findIndex((element) => element.id == id) : -1
+          this.skills?.splice(index, 1)
           this.loading = false;
         });
     }

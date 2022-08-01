@@ -9,71 +9,106 @@
         </div>
     </div>
     <div class="row justify-content-around">
+        <div *ngFor="let element of getSkills(category.cat)" class='col-sm-6 col-lg-4 col-xl-3 text-center p-2'>
+            <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
 
-
-        <div class='col-sm-6 col-lg-4 col-xl-3 text-center p-2'>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Habilidad</h5>
-                    <div class="card-text">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0"
-                                aria-valuemax="100" style="width: 75%"></div>
+            <!-- To show information -->
+            <ng-template #notOnEdition>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <h5 class="card-title" [ngClass]="{'col-6': (isLoggedIn | async)}">
+                                {{element.skillName}}
+                            </h5>
+                            <div *ngIf="(isLoggedIn | async)" class="col-6 p-3">
+                                <div class="row justify-content-evenly">
+                                    <div class="col-sm-4">
+                                        <button class="btn btn-secondary" (click)="openEdition(element)">
+                                            <fa-icon [icon]="faPen"></fa-icon>
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button class="btn btn-danger" type="button" (click)="delete(element.id)">
+                                            <fa-icon [icon]="faTrash"></fa-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p>Descripción</p>
+
+                        <div class="card-text">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                    aria-label="Animated striped example" attr.aria-valuenow="{{element.percentage}}"  aria-valuemin="0"
+                                    aria-valuemax="100" attr.style="width: {{element.percentage}}%">
+                                </div>
+                            </div>
+                            <p>{{element.description}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </ng-template>
 
-        <div class='col-sm-6 col-lg-4 col-xl-3 text-center p-2'>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Habilidad</h5>
-                    <div class="card-text">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0"
-                                aria-valuemax="100" style="width: 75%"></div>
+            <!-- To edit -->
+            <ng-template #onEdition>
+                <form [formGroup]="form" (ngSubmit)="submitForm()" class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h6>
+                                            <input type="text" formControlName="skillName" placeholder="Habilidad"
+                                                [ngClass]="{'is-invalid': skillName?.errors && skillName?.touched}"
+                                                class="form-control">
+                                        </h6>
+                                        <div *ngIf="skillName?.errors && skillName?.touched">
+                                            <p *ngIf="skillName?.hasError('required')"
+                                                class="text-danger fs-6 fw-normal fst-normal">
+                                                Por favor, ingresar la habilidad.
+                                            </p>
+                                            <p *ngIf="skillName?.hasError('maxlength')"
+                                                class="text-danger fs-6 fw-normal fst-normal">
+                                                La habilidad no debe superar los 100 caracteres.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row justify-content-around">
+                                            <div class="col-4">
+                                                <button class="btn btn-primary" type="submit" [disabled]="!form.valid">
+                                                    <fa-icon [icon]="faCheck"></fa-icon>
+                                                </button>
+                                            </div>
+                                            <div class="col-4">
+                                                <button class="btn btn-secondary" type="button" (click)="cancelForm()">
+                                                    <fa-icon [icon]="faXmark"></fa-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h5>
+                            <div class="card-text">
+                                <input type="range" formControlName="percentage" class="form-range">
+                                <textarea type="text" formControlName="description" placeholder="Descripción"
+                                    [ngClass]="{'is-invalid': description?.errors && description?.touched}"
+                                    class="form-control"></textarea>
+                                <div *ngIf="description?.errors && description?.touched">
+                                    <p *ngIf="description?.hasError('required')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
+                                        Por favor, ingresar la descripción.
+                                    </p>
+                                    <p *ngIf="description?.hasError('maxlength')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
+                                        La descripción no debe superar los 500 caracteres.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <p>Descripción</p>
                     </div>
-                </div>
-            </div>
+                </form>
+            </ng-template>
         </div>
-
-        <div class='col-sm-6 col-lg-4 col-xl-3 text-center p-2'>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Habilidad</h5>
-                    <div class="card-text">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0"
-                                aria-valuemax="100" style="width: 75%"></div>
-                        </div>
-                        <p>Descripción</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class='col-sm-6 col-lg-4 col-xl-3 text-center p-2'>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Habilidad</h5>
-                    <div class="card-text">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0"
-                                aria-valuemax="100" style="width: 75%"></div>
-                        </div>
-                        <p>Descripción</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
