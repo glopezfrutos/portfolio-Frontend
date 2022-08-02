@@ -1,41 +1,183 @@
-<h3>Proyectos</h3>
+<div class="row">
+    <h3 class="col-9">Proyectos</h3>
+    <div *ngIf="(isLoggedIn | async)" class="col-1 ms-auto">
+        <button class="btn btn-primary" type="button" [disabled]="onNewElement" (click)="newElement()">
+            <fa-icon [icon]="faPlus"></fa-icon>
+        </button>
+    </div>
+</div>
+
 <div class="row justify-content-around">
+    <div *ngFor="let element of project" class='col-sm-6 col-lg-4 col-xl-3 text-center p-2'>
+        <div *ngIf="onEdit && elementToEdit?.id == element.id; then onEdition else notOnEdition"></div>
 
-    <div class='col-sm-6 col-lg-4 col-xl-3 text-center p-2'>
-        <div class="card">
-            <img src="..." class="card-img-top" alt="Project img">
-            <div class="card-body">
-                <h5 class="card-title">Project title</h5>
-                <div class="card-text">
-                    <p>Project description</p>
-                    <p><a href="" target="_blank" rel="noopener noreferrer">
-                            <fa-icon [icon]="faGlobe"></fa-icon> Visitar el despliegue
-                        </a></p>
-                    <p><a href="" target="_blank" rel="noopener noreferrer">
-                            <fa-icon [icon]="faGithub"></fa-icon> Visitar el repositorio
-                        </a></p>
+        <!-- To show information -->
+        <ng-template #notOnEdition>
+            <div class="card">
+                <div class="card-body">
+                    <img *ngIf="element.imgUrl" src="{{element.imgUrl}}" class="card-img-top"
+                        alt="Imagen de {{element.title}}">
+                    <div class="row">
+                        <h5 class="card-title mt-2 p-2" [ngClass]="{'col-6': (isLoggedIn | async)}">
+                            {{element.title}}
+                        </h5>
+                        <div *ngIf="(isLoggedIn | async)" class="col-6 p-3">
+                            <div class="row justify-content-evenly">
+                                <div class="col-sm-4">
+                                    <button class="btn btn-secondary" (click)="openEdition(element)">
+                                        <fa-icon [icon]="faPen"></fa-icon>
+                                    </button>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-danger" type="button" (click)="delete(element.id)">
+                                        <fa-icon [icon]="faTrash"></fa-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-text p-2">
+                        <p *ngIf="element.deploy"><a href="{{element.deploy}}" target="_blank"
+                                rel="noopener noreferrer">
+                                <fa-icon [icon]="faGlobe"></fa-icon> Visitar el despliegue
+                            </a></p>
+                        <p *ngIf="element.frontEndRepository"><a href="{{element.frontEndRepository}}" target="_blank"
+                                rel="noopener noreferrer">
+                                <fa-icon [icon]="faGithub"></fa-icon> Repositorio Front End
+                            </a></p>
+                        <p *ngIf="element.backEndRepository"><a href="{{element.backEndRepository}}" target="_blank"
+                                rel="noopener noreferrer">
+                                <fa-icon [icon]="faGithub"></fa-icon> Repositorio Back End
+                            </a></p>
+                        <p>{{element.description}}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </ng-template>
 
-    <div class='col-sm-6 col-lg-4 col-xl-3 text-center p-2'>
-        <div class="card">
-            <img src="..." class="card-img-top" alt="Project img">
-            <div class="card-body">
-                <h5 class="card-title">Project title</h5>
-                <div class="card-text">
-                    <p>Project description</p>
-                    <p><a href="" target="_blank" rel="noopener noreferrer">
-                            <fa-icon [icon]="faGlobe"></fa-icon> Visitar el despliegue
-                        </a></p>
-                    <p><a href="" target="_blank" rel="noopener noreferrer">
-                            <fa-icon [icon]="faGithub"></fa-icon> Visitar el repositorio
-                        </a></p>
+        <!-- To edit -->
+        <ng-template #onEdition>
+            <form [formGroup]="form" (ngSubmit)="submitForm()" class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <textarea placeholder="Link de la imagen" type="text" formControlName="imgUrl" rows="5"
+                            [ngClass]="{'is-invalid': imgUrl?.errors && imgUrl?.touched}"
+                            class="form-control"></textarea>
+                        <div *ngIf="imgUrl?.errors && imgUrl?.touched">
+                            <p *ngIf="imgUrl?.hasError('maxlength')" class="text-danger fs-6 fw-normal fst-normal">
+                                El link a la imagen no debe superar los 1500 caracteres.
+                            </p>
+                        </div>
+                        <h5 class="card-title">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h6 class="p-2">
+                                        <input type="text" formControlName="title" placeholder="Título del proyecto"
+                                            [ngClass]="{'is-invalid': title?.errors && title?.touched}"
+                                            class="form-control">
+                                    </h6>
+                                    <div *ngIf="title?.errors && title?.touched">
+                                        <p *ngIf="title?.hasError('required')"
+                                            class="text-danger fs-6 fw-normal fst-normal">
+                                            Por favor, ingresar el título del proyecto.
+                                        </p>
+                                        <p *ngIf="title?.hasError('maxlength')"
+                                            class="text-danger fs-6 fw-normal fst-normal">
+                                            El título del proyecto no debe superar los 100 caracteres.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row justify-content-around">
+                                        <div class="col-4">
+                                            <button class="btn btn-primary" type="submit" [disabled]="!form.valid">
+                                                <fa-icon [icon]="faCheck"></fa-icon>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-secondary" type="button" (click)="cancelForm()">
+                                                <fa-icon [icon]="faXmark"></fa-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h5>
+                        <div class="card-text p-2">
+                            <textarea type="text" formControlName="description" placeholder="Descripción"
+                                [ngClass]="{'is-invalid': description?.errors && description?.touched}"
+                                class="form-control"></textarea>
+                            <div *ngIf="description?.errors && description?.touched">
+                                <p *ngIf="description?.hasError('required')"
+                                    class="text-danger fs-6 fw-normal fst-normal">
+                                    Por favor, ingresar la descripción.
+                                </p>
+                                <p *ngIf="description?.hasError('maxlength')"
+                                    class="text-danger fs-6 fw-normal fst-normal">
+                                    La descripción no debe superar los 500 caracteres.
+                                </p>
+                            </div>
+                            <div class="row text-center">
+                                <fa-icon [icon]="faGlobe" class="col-2"></fa-icon>
+                                <div class="col-10">
+                                    <input type="text" formControlName="deploy" placeholder="Link al despliegue"
+                                        [ngClass]="{'is-invalid': deploy?.errors && deploy?.touched}"
+                                        class="form-control">
+                                </div>
+                                <div *ngIf="deploy?.errors && deploy?.touched">
+                                    <p *ngIf="deploy?.hasError('maxlength')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
+                                        El link al deploy no debe superar los 100 caracteres.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <fa-icon [icon]="faGithub" class="col-2"></fa-icon>
+                                <div class="col-10">
+                                    <input type="text" formControlName="backEndRepository"
+                                        placeholder="Link al repositorio Back End"
+                                        [ngClass]="{'is-invalid': deploy?.errors && deploy?.touched}"
+                                        class="form-control">
+                                </div>
+                                <div *ngIf="deploy?.errors && deploy?.touched">
+                                    <p *ngIf="deploy?.hasError('maxlength')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
+                                        El link al al repositorio Back End no debe superar los 100 caracteres.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <fa-icon [icon]="faGithub" class="col-2"></fa-icon>
+                                <div class="col-10">
+                                    <input type="text" formControlName="frontEndRepository"
+                                        placeholder="Link al repositorio Front End"
+                                        [ngClass]="{'is-invalid': deploy?.errors && deploy?.touched}"
+                                        class="form-control">
+                                </div>
+                                <div *ngIf="deploy?.errors && deploy?.touched">
+                                    <p *ngIf="deploy?.hasError('maxlength')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
+                                        El link al al repositorio Front End no debe superar los 100 caracteres.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
+        </ng-template>
+    </div>
+</div>
+
+
+<!-- Spinner -->
+<div *ngIf="project == undefined || loading">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
-
-
 </div>

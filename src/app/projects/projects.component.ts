@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Education } from '../shared/types/Education';
 import { faPen, faCheck, faXmark, faTrash, faPlus, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { EducationService } from '../service/education/education.service';
+import { Project } from '../shared/types/Project';
+import { ProjectService } from '../service/project/project.service';
 
 
 @Component({
@@ -17,31 +17,17 @@ export class ProjectsComponent implements OnInit {
   isLoggedIn: Observable<boolean>;
 
   constructor(
-    private educationService: EducationService,
+    private projectService: ProjectService,
     private authService: AuthService,
     private fb: FormBuilder,
   ) {
     this.isLoggedIn = this.authService.isLoggedIn();
   }
 
-  education?: Education[];
-  categoriesToShow = [
-    {
-      "cat": 'HARD',
-      "toShow": "Tecnologías"
-    },
-    {
-      "cat": 'SOFT',
-      "toShow": "Habilidades blancas"
-    }
-  ]
-
-  getEducation(educationCategory: string) {
-    return this.education?.filter(element => element.educationCategory == educationCategory)
-  }
+  project?: Project[];
 
   ngOnInit(): void {
-    this.educationService.getAll().subscribe(education => this.education = education)
+    this.projectService.getAll().subscribe(project => this.project = project)
   }
 
   faPen = faPen
@@ -54,25 +40,23 @@ export class ProjectsComponent implements OnInit {
 
   onEdit = false;
   onNewElement = false;
-  elementToEdit?: Education;
+  elementToEdit?: Project;
   loading = false;
 
 
   form = this.fb.group({
     id: [1],
-    institution: ['', [Validators.required, Validators.maxLength(100)]],
-    title: ['', [Validators.required, Validators.maxLength(100)]],
+    title: ['', [Validators.required, Validators.maxLength(50)]],
     description: ['', [Validators.required, Validators.maxLength(500)]],
-    imgUrl: ['', [Validators.required, Validators.maxLength(1500)]],
-    educationCategory: ['', [Validators.required]],
+    deploy: ['', [Validators.maxLength(100)]],
+    backEndRepository: ['', [Validators.maxLength(100)]],
+    frontEndRepository: ['', [Validators.maxLength(100)]],
+    imgUrl: ['', [Validators.maxLength(1500)]],
   });
 
 
   get id() {
     return this.form.get("id")
-  }
-  get institution() {
-    return this.form.get("institution")
   }
   get title() {
     return this.form.get("title")
@@ -80,46 +64,56 @@ export class ProjectsComponent implements OnInit {
   get description() {
     return this.form.get("description")
   }
+  get deploy() {
+    return this.form.get("deploy")
+  }
+  get backEndRepository() {
+    return this.form.get("backEndRepository")
+  }
+  get frontEndRepository() {
+    return this.form.get("frontEndRepository")
+  }
   get imgUrl() {
     return this.form.get("imgUrl")
   }
-  get educationCategory() {
-    return this.form.get("educationCategory")
-  }
 
-  openEdition(element: Education) {
+  openEdition(element: Project) {
     this.elementToEdit = element;
     this.onEdit = true;
     this.form.reset()
     this.form.patchValue({
       id: element.id,
-      institution: element.institution,
       title: element.title,
       description: element.description,
-      imgUrl: element.imgUrl,
-      educationCategory: element.educationCategory
+      deploy: element.deploy,
+      backEndRepository: element.backEndRepository,
+      frontEndRepository: element.frontEndRepository,
+      imgUrl: element.imgUrl
     });
   }
 
-  newElement(educationCategory: string) {
-    this.elementToEdit = { id: undefined, institution: "", title: "", description: "", imgUrl: "", educationCategory: educationCategory }
-    this.education?.push(this.elementToEdit)
+  newElement() {
+    this.elementToEdit = { id: undefined, title: "", description: "", imgUrl: "", deploy: "", backEndRepository: "", frontEndRepository: "" }
+    this.project?.push(this.elementToEdit)
     this.onNewElement = true;
     this.onEdit = true;
+    this.form.reset()
     this.form.patchValue({
       id: this.elementToEdit.id,
-      institution: this.elementToEdit.institution,
       title: this.elementToEdit.title,
       description: this.elementToEdit.description,
       imgUrl: this.elementToEdit.imgUrl,
-      educationCategory: this.elementToEdit.educationCategory
-    });
+      deploy: this.elementToEdit.deploy,
+      backEndRepository: this.elementToEdit.backEndRepository,
+      frontEndRepository: this.elementToEdit.frontEndRepository,    });
   }
 
   cancelForm() {
+    console.log(this.imgUrl?.value);
+    
     this.onEdit = false;
     if (this.onNewElement) {
-      this.education?.splice(-1, 1);
+      this.project?.splice(-1, 1);
       this.onNewElement = false;
     }
   }
@@ -129,21 +123,21 @@ export class ProjectsComponent implements OnInit {
     this.loading = true;
 
     if (this.form.valid && !this.onNewElement) {
-      this.educationService
+      this.projectService
         .put(this.form.value)
         .subscribe(result => {
-          let index = this.education != undefined ? this.education.findIndex((element) => element.id == result.id) : -1
-          if (index == -1) this.education?.push(result)
-          this.education?.splice(index, 1, result)
+          let index = this.project != undefined ? this.project.findIndex((element) => element.id == result.id) : -1
+          if (index == -1) this.project?.push(result)
+          this.project?.splice(index, 1, result)
           this.loading = false;
         })
     }
 
     if (this.form.valid && this.onNewElement) {
-      this.educationService
+      this.projectService
         .post(this.form.value)
         .subscribe(result => {
-          this.education?.splice(-1, 1, result)
+          this.project?.splice(-1, 1, result)
           this.loading = false;
         });
       this.onNewElement = false;
@@ -155,11 +149,11 @@ export class ProjectsComponent implements OnInit {
     this.loading = true;
 
     if (!this.onNewElement) {
-      this.educationService
+      this.projectService
         .delete(id)
         .subscribe(() => {
-          let index = this.education != undefined ? this.education.findIndex((element) => element.id == id) : -1
-          this.education?.splice(index, 1)
+          let index = this.project != undefined ? this.project.findIndex((element) => element.id == id) : -1
+          this.project?.splice(index, 1)
           this.loading = false;
         });
     }
