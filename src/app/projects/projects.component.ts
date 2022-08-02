@@ -93,7 +93,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   newElement() {
-    this.elementToEdit = { id: undefined, title: "", description: "", imgUrl: "", deploy: "", backEndRepository: "", frontEndRepository: "" }
+    this.elementToEdit = { id: undefined, title: "", description: "", imgUrl: undefined, deploy: undefined, backEndRepository: undefined, frontEndRepository: undefined }
     this.project?.push(this.elementToEdit)
     this.onNewElement = true;
     this.onEdit = true;
@@ -105,12 +105,13 @@ export class ProjectsComponent implements OnInit {
       imgUrl: this.elementToEdit.imgUrl,
       deploy: this.elementToEdit.deploy,
       backEndRepository: this.elementToEdit.backEndRepository,
-      frontEndRepository: this.elementToEdit.frontEndRepository,    });
+      frontEndRepository: this.elementToEdit.frontEndRepository
+    });
   }
 
   cancelForm() {
     console.log(this.imgUrl?.value);
-    
+
     this.onEdit = false;
     if (this.onNewElement) {
       this.project?.splice(-1, 1);

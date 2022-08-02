@@ -50,7 +50,7 @@
                                 rel="noopener noreferrer">
                                 <fa-icon [icon]="faGithub"></fa-icon> Repositorio Back End
                             </a></p>
-                        <p>{{element.description}}</p>
+                        <p id="preline">{{element.description}}</p>
                     </div>
                 </div>
             </div>
@@ -105,19 +105,6 @@
                             </div>
                         </h5>
                         <div class="card-text p-2">
-                            <textarea type="text" formControlName="description" placeholder="Descripción"
-                                [ngClass]="{'is-invalid': description?.errors && description?.touched}"
-                                class="form-control"></textarea>
-                            <div *ngIf="description?.errors && description?.touched">
-                                <p *ngIf="description?.hasError('required')"
-                                    class="text-danger fs-6 fw-normal fst-normal">
-                                    Por favor, ingresar la descripción.
-                                </p>
-                                <p *ngIf="description?.hasError('maxlength')"
-                                    class="text-danger fs-6 fw-normal fst-normal">
-                                    La descripción no debe superar los 500 caracteres.
-                                </p>
-                            </div>
                             <div class="row text-center">
                                 <fa-icon [icon]="faGlobe" class="col-2"></fa-icon>
                                 <div class="col-10">
@@ -161,9 +148,20 @@
                                         El link al al repositorio Front End no debe superar los 100 caracteres.
                                     </p>
                                 </div>
-
+                                <textarea type="text" formControlName="description" placeholder="Descripción"
+                                    [ngClass]="{'is-invalid': description?.errors && description?.touched}"
+                                    class="form-control"></textarea>
+                                <div *ngIf="description?.errors && description?.touched">
+                                    <p *ngIf="description?.hasError('required')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
+                                        Por favor, ingresar la descripción.
+                                    </p>
+                                    <p *ngIf="description?.hasError('maxlength')"
+                                        class="text-danger fs-6 fw-normal fst-normal">
+                                        La descripción no debe superar los 500 caracteres.
+                                    </p>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
