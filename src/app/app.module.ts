@@ -19,6 +19,8 @@ import { AdminComponent } from './admin/admin.component';
 import { InterceptorService } from './service/interceptor/interceptor.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { CarouselModule } from '@coreui/angular';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +34,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ProjectsComponent,
     FooterComponent,
     NavbarComponent,
-    AdminComponent
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CarouselModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
